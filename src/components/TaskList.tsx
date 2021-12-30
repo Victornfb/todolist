@@ -16,32 +16,42 @@ export function TaskList() {
 
   function handleCreateNewTask() {
     // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
-    if (newTaskTitle.trim() !== '') {
-      const newTask = {
-        id: Math.floor(Math.random() * (50 - 1 + 1) ) + 1,
-        title: newTaskTitle,
-        isComplete: false,
-      }
-      setTasks(oldState => [...oldState, newTask]);
-      setNewTaskTitle('');
-    } else {
-      alert('O campo não pode ser vazio.');
+    if(!newTaskTitle) return;
+
+    const newTask = {
+      id: Math.floor(Math.random() * 100) + 1,
+      title: newTaskTitle,
+      isComplete: false,
     }
+
+    setTasks([...tasks, newTask]);
+    setNewTaskTitle('');
   }
 
   function handleToggleTaskCompletion(id: number) {
     // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
-    const tasksCompleted = tasks.map(task => task.id === id ? {
-      ...task,
-      isComplete: !task.isComplete,
-    } : task);
-    setTasks(tasksCompleted);
+    const taskCompleted = tasks.map((task) => {
+      if(task.id === id) {
+        task.isComplete = !task.isComplete;
+      }
+      return task;
+    });
+    setTasks([...taskCompleted]);
+
+    // Não parece certo mexer diretamente na "tasks", então fiz o método acima
+    // tasks.map((task) => {
+    //   if(task.id === id){ task.isComplete = true }
+    // });
+    // setTasks([...tasks])
   }
 
   function handleRemoveTask(id: number) {
     // Remova uma task da listagem pelo ID
-    const filteredTasks = tasks.filter(task => task.id !== id);
-    setTasks(filteredTasks);
+    const taskList = tasks.filter((task) => {
+      if(task.id !== id) return task;
+    });
+
+    setTasks([...taskList]);
   }
 
   return (
